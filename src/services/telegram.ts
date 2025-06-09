@@ -29,7 +29,7 @@ class TelegramService {
   }
 
   private escapeMarkdown(text: string): string {
-    return text.replace(/[_*[\\]()~`>#+=|{}.!]/g, "\\\\$&");
+    return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, "\\$&");
   }
 
   /**
@@ -117,14 +117,14 @@ class TelegramService {
       }[appointment.status] || "❓";
 
     return [
-      `*${statusEmoji} YENİ RANDEVU DURUMU\\\\! *
+      `*${statusEmoji} ${this.escapeMarkdown("YENİ RANDEVU DURUMU!")} *
 `,
       `🏢 *Merkez:* ${this.escapeMarkdown(
         appointment.center.replace(/\\s*-\\s*/g, "")
       )}`,
       `🌍 *Ülke/Misyon:* ${this.escapeMarkdown(
         appointment.country_code.toUpperCase().replace(/\\s*-\\s*/g, "")
-      )} \\\\-\\\*> ${this.escapeMarkdown(
+      )} ${this.escapeMarkdown("->")} ${this.escapeMarkdown(
         appointment.mission_code.toUpperCase().replace(/\\s*-\\s*/g, "")
       )}`,
       `🛂 *Kategori:* ${this.escapeMarkdown(
@@ -137,9 +137,11 @@ class TelegramService {
       `🗓️ *Son Müsait Tarih:* ${formatAvailableDate(
         appointment.last_available_date
       )}`,
-      `\\n📊 *Takip Sayısı:* ${appointment.tracking_count}`,
-      `\\n⏰ *Son Kontrol:* ${this.escapeMarkdown(formatDate(lastChecked))}`,
-    ].join("\\n");
+      ``,
+      `📊 *Takip Sayısı:* ${appointment.tracking_count}`,
+      ``,
+      `⏰ *Son Kontrol:* ${this.escapeMarkdown(formatDate(lastChecked))}`,
+    ].join("\n");
   }
 
   /**
